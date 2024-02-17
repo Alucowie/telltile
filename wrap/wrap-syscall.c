@@ -63,6 +63,27 @@ int open(const char* path, int flags, ...)
 	return ret;
 }
 
+int openat(int dirfd, const char *path, int flags, ...)
+{
+    int ret = -1;
+    mode_t mode = 0;
+    PROLOG(openat);
+
+    printf("wrap openat\n");
+    if (dirfd == AT_FDCWD || path[0] == '/') {
+	va_list args;
+	va_start(args, flags);
+	mode = (mode_t) va_arg(args, int);
+	va_end(args);
+
+	ret = open(path, flags, mode);
+    } else {
+	printf("#### openat not supported.\n");
+    }
+
+    return ret;
+}
+
 int close(int fd)
 {
 	PROLOG(close);
