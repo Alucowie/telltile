@@ -33,6 +33,9 @@
 #include <stdio.h>
 #include <assert.h>
 
+#include "pvr_bridge.h"
+#include "sgx_bridge.h"
+
 void * __rd_dlsym_helper(const char *name);
 
 #define PROLOG(func)					\
