@@ -261,130 +261,130 @@ static void pvrsrvkm_ioctl_pre(int fd, unsigned long int request, void *ptr)
 	pvrsrv_dump_in(ptr);
 	switch(_IOC_NR(request)) {
 	case _IOC_NR(PVRSRV_BRIDGE_CONNECT_SERVICES):
-		printf("ioctl connect_services pre\n");
+		pvrsrv_bridge_connect_services_pre(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_INITSRV_CONNECT):
-		printf("ioctl initsrv_connect pre\n");
+		pvrsrv_bridge_initsrv_connect_pre(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_ENUM_DEVICES):
-		printf("ioctl enum_devices pre\n");
+		pvrsrv_bridge_enum_devices_pre(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_ACQUIRE_DEVICEINFO):
-		printf("ioctl acquire_deviceinfo pre\n");
+		pvrsrv_bridge_acquire_deviceinfo_pre(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_SGXINFO_FOR_SRVINIT):
-		printf("ioctl sgxinfo_for_srvinit pre\n");
+		pvrsrv_bridge_sgxinfo_for_srvinit_pre(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_ALLOC_DEVICEMEM):
-		printf("ioctl alloc_devicemem pre\n");
+		pvrsrv_bridge_alloc_devicemem_pre(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_MHANDLE_TO_MMAP_DATA):
-		printf("ioctl mhandle_to_mmap_data pre\n");
+		pvrsrv_bridge_mhandle_to_mmap_data_pre(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_RELEASE_MMAP_DATA):
-		printf("ioctl release_mmap_data pre\n");
+		pvrsrv_bridge_release_mmap_data_pre(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_SGX_DEVINITPART2):
-		printf("ioctl sgx_devinitpart2 pre\n");
+		pvrsrv_bridge_sgx_devinitpart2_pre(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_INITSRV_DISCONNECT):
-		printf("ioctl initsrv_disconnect pre\n");
+		pvrsrv_bridge_initsrv_disconnect_pre(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_DISCONNECT_SERVICES):
-		printf("ioctl disconnect_services pre\n");
+		pvrsrv_bridge_disconnect_services_pre(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_SGX_GETMISCINFO):
-		printf("ioctl sgx_getmiscinfo pre\n");
+		pvrsrv_bridge_sgx_getmiscinfo_pre(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_CREATE_DEVMEMCONTEXT):
-		printf("ioctl create_devmemcontext pre\n");
+		pvrsrv_bridge_create_devmemcontext_pre(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_SGX_GETCLIENTINFO):
-		printf("ioctl sgx_getclientinfo pre\n");
+		pvrsrv_bridge_sgx_getclientinfo_pre(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_GET_MISC_INFO):
-		printf("ioctl get_misc_info pre\n");
+		pvrsrv_bridge_get_misc_info_pre(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_EVENT_OBJECT_OPEN):
-		printf("ioctl event_object_open pre\n");
+		pvrsrv_bridge_event_object_open_pre(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_GET_DEVMEM_HEAPINFO):
-		printf("ioctl get_devmem_heapinfo pre\n");
+		pvrsrv_bridge_get_devmem_heapinfo_pre(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_GETMMU_PD_DEVPADDR):
-		printf("ioctl getmmu_pd_devpaddr pre\n");
+		pvrsrv_bridge_getmmu_pd_devpaddr_pre(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_SGX_GETINTERNALDEVINFO):
-		printf("ioctl sgx_getinternaldevinfo pre\n");
+		pvrsrv_bridge_sgx_getinternaldevinfo_pre(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_SGX_REGISTER_HW_RENDER_CONTEXT):
-		printf("ioctl sgx_register_hw_render_context pre\n");
+		pvrsrv_bridge_sgx_register_hw_render_context_pre(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_SGX_REGISTER_HW_TRANSFER_CONTEXT):
-		printf("ioctl sgx_register_hw_transfer_context pre\n");
+		pvrsrv_bridge_sgx_register_hw_transfer_context_pre(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_ENUM_CLASS):
-		printf("ioctl enum_class pre\n");
+		pvrsrv_bridge_enum_class_pre(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_OPEN_DISPCLASS_DEVICE):
-		printf("ioctl open_dispclass_device pre\n");
+		pvrsrv_bridge_open_dispclass_device_pre(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_GET_DISPCLASS_INFO):
-		printf("ioctl get_dispclass_info pre\n");
+		pvrsrv_bridge_get_dispclass_info_pre(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_CLOSE_DISPCLASS_DEVICE):
-		printf("ioctl close_dispclass_device pre\n");
+		pvrsrv_bridge_close_dispclass_device_pre(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_ENUM_DISPCLASS_FORMATS):
-		printf("ioctl enum_dispclass_formats pre\n");
+		pvrsrv_bridge_enum_dispclass_formats_pre(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_ENUM_DISPCLASS_DIMS):
-		printf("ioctl enum_dispclass_dims pre\n");
+		pvrsrv_bridge_enum_dispclass_dims_pre(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_GET_DISPCLASS_SYSBUFFER):
-		printf("ioctl get_dispclass_sysbuffer pre\n");
+		pvrsrv_bridge_get_dispclass_sysbuffer_pre(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_MAP_DEVICECLASS_MEMORY):
-		printf("ioctl map_deviceclass_memory pre\n");
+		pvrsrv_bridge_map_deviceclass_memory_pre(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_FREE_DEVICEMEM):
-		printf("ioctl free_devicemem pre\n");
+		pvrsrv_bridge_free_devicemem_pre(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_SYNC_OPS_TAKE_TOKEN):
-		printf("ioctl sync_ops_take_token pre\n");
+		pvrsrv_bridge_sync_ops_take_token_pre(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_SYNC_OPS_FLUSH_TO_TOKEN):
-		printf("ioctl sync_ops_flush_to_token pre\n");
+		pvrsrv_bridge_sync_ops_flush_to_token_pre(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_SGX_FLUSH_HW_RENDER_TARGET):
-		printf("ioctl sgx_flush_hw_render_target pre\n");
+		pvrsrv_bridge_sgx_flush_hw_render_target_pre(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_EVENT_OBJECT_CLOSE):
-		printf("ioctl event_object_close pre\n");
+		pvrsrv_bridge_event_object_close_pre(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_DESTROY_DEVMEMCONTEXT):
-		printf("ioctl destroy_devmemcontext pre\n");
+		pvrsrv_bridge_destroy_devmemcontext_pre(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_SGX_UNREGISTER_HW_TRANSFER_CONTEXT):
-		printf("ioctl sgx_unregister_hw_transfer_context pre\n");
+		pvrsrv_bridge_sgx_unregister_hw_transfer_context_pre(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_SGX_UNREGISTER_HW_RENDER_CONTEXT):
-		printf("ioctl sgx_unregister_hw_render_context pre\n");
+		pvrsrv_bridge_sgx_unregister_hw_render_context_pre(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_SGX_RELEASECLIENTINFO):
-		printf("ioctl sgx_releaseclientinfo pre\n");
+		pvrsrv_bridge_sgx_releaseclientinfo_pre(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_SGX_SUBMITTRANSFER):
-		printf("ioctl sgx_submittransfer pre\n");
+		pvrsrv_bridge_sgx_submittransfer_pre(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_SGX_DOKICK):
-		printf("ioctl sgx_dokick pre\n");
+		pvrsrv_bridge_sgx_dokick_pre(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_EVENT_OBJECT_WAIT):
-		printf("ioctl event_object_wait pre\n");
+		pvrsrv_bridge_event_object_wait_pre(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_UNMAP_DEVICECLASS_MEMORY):
-		printf("ioctl unmap_deviceclass_memory pre\n");
+		pvrsrv_bridge_unmap_deviceclass_memory_pre(fd, ptr);
 		break;
 	default:
 		printf("> [%4d]         : <unknown param> (%08lx)\n", fd, request);
@@ -398,130 +398,130 @@ static void pvrsrvkm_ioctl_post(int fd, unsigned long int request, void *ptr, in
 	pvrsrv_dump_out(ptr);
 	switch(_IOC_NR(request)) {
 	case _IOC_NR(PVRSRV_BRIDGE_CONNECT_SERVICES):
-		printf("ioctl connect_services post\n");
+		pvrsrv_bridge_connect_services_post(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_INITSRV_CONNECT):
-		printf("ioctl initsrv_connect post\n");
+		pvrsrv_bridge_initsrv_connect_post(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_ENUM_DEVICES):
-		printf("ioctl enum_devices post\n");
+		pvrsrv_bridge_enum_devices_post(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_ACQUIRE_DEVICEINFO):
-		printf("ioctl acquire_deviceinfo post\n");
+		pvrsrv_bridge_acquire_deviceinfo_post(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_SGXINFO_FOR_SRVINIT):
-		printf("ioctl sgxinfo_for_srvinit post\n");
+		pvrsrv_bridge_sgxinfo_for_srvinit_post(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_ALLOC_DEVICEMEM):
-		printf("ioctl alloc_devicemem post\n");
+		pvrsrv_bridge_alloc_devicemem_post(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_MHANDLE_TO_MMAP_DATA):
-		printf("ioctl mhandle_to_mmap_data post\n");
+		pvrsrv_bridge_mhandle_to_mmap_data_post(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_RELEASE_MMAP_DATA):
-		printf("ioctl release_mmap_data post\n");
+		pvrsrv_bridge_release_mmap_data_post(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_SGX_DEVINITPART2):
-		printf("ioctl sgx_devinitpart2 post\n");
+		pvrsrv_bridge_sgx_devinitpart2_post(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_INITSRV_DISCONNECT):
-		printf("ioctl initsrv_disconnect post\n");
+		pvrsrv_bridge_initsrv_disconnect_post(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_DISCONNECT_SERVICES):
-		printf("ioctl disconnect_services post\n");
+		pvrsrv_bridge_disconnect_services_post(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_SGX_GETMISCINFO):
-		printf("ioctl sgx_getmiscinfo post\n");
+		pvrsrv_bridge_sgx_getmiscinfo_post(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_CREATE_DEVMEMCONTEXT):
-		printf("ioctl create_devmemcontext post\n");
+		pvrsrv_bridge_create_devmemcontext_post(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_SGX_GETCLIENTINFO):
-		printf("ioctl sgx_getclientinfo post\n");
+		pvrsrv_bridge_sgx_getclientinfo_post(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_GET_MISC_INFO):
-		printf("ioctl get_misc_info post\n");
+		pvrsrv_bridge_get_misc_info_post(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_EVENT_OBJECT_OPEN):
-		printf("ioctl event_object_open post\n");
+		pvrsrv_bridge_event_object_open_post(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_GET_DEVMEM_HEAPINFO):
-		printf("ioctl get_devmem_heapinfo post\n");
+		pvrsrv_bridge_get_devmem_heapinfo_post(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_GETMMU_PD_DEVPADDR):
-		printf("ioctl getmmu_pd_devpaddr post\n");
+		pvrsrv_bridge_getmmu_pd_devpaddr_post(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_SGX_GETINTERNALDEVINFO):
-		printf("ioctl sgx_getinternaldevinfo post\n");
+		pvrsrv_bridge_sgx_getinternaldevinfo_post(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_SGX_REGISTER_HW_RENDER_CONTEXT):
-		printf("ioctl sgx_register_hw_render_context post\n");
+		pvrsrv_bridge_sgx_register_hw_render_context_post(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_SGX_REGISTER_HW_TRANSFER_CONTEXT):
-		printf("ioctl sgx_register_hw_transfer_context post\n");
+		pvrsrv_bridge_sgx_register_hw_transfer_context_post(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_ENUM_CLASS):
-		printf("ioctl enum_class post\n");
+		pvrsrv_bridge_enum_class_post(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_OPEN_DISPCLASS_DEVICE):
-		printf("ioctl open_dispclass_device post\n");
+		pvrsrv_bridge_open_dispclass_device_post(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_GET_DISPCLASS_INFO):
-		printf("ioctl get_dispclass_info post\n");
+		pvrsrv_bridge_get_dispclass_info_post(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_CLOSE_DISPCLASS_DEVICE):
-		printf("ioctl close_dispclass_device post\n");
+		pvrsrv_bridge_close_dispclass_device_post(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_ENUM_DISPCLASS_FORMATS):
-		printf("ioctl enum_dispclass_formats post\n");
+		pvrsrv_bridge_enum_dispclass_formats_post(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_ENUM_DISPCLASS_DIMS):
-		printf("ioctl enum_dispclass_dims post\n");
+		pvrsrv_bridge_enum_dispclass_dims_post(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_GET_DISPCLASS_SYSBUFFER):
-		printf("ioctl get_dispclass_sysbuffer post\n");
+		pvrsrv_bridge_get_dispclass_sysbuffer_post(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_MAP_DEVICECLASS_MEMORY):
-		printf("ioctl map_deviceclass_memory post\n");
+		pvrsrv_bridge_map_deviceclass_memory_post(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_FREE_DEVICEMEM):
-		printf("ioctl free_devicemem post\n");
+		pvrsrv_bridge_free_devicemem_post(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_SYNC_OPS_TAKE_TOKEN):
-		printf("ioctl sync_ops_take_token post\n");
+		pvrsrv_bridge_sync_ops_take_token_post(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_SYNC_OPS_FLUSH_TO_TOKEN):
-		printf("ioctl sync_ops_flush_to_token post\n");
+		pvrsrv_bridge_sync_ops_flush_to_token_post(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_SGX_FLUSH_HW_RENDER_TARGET):
-		printf("ioctl sgx_flush_hw_render_target post\n");
+		pvrsrv_bridge_sgx_flush_hw_render_target_post(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_EVENT_OBJECT_CLOSE):
-		printf("ioctl event_object_close post\n");
+		pvrsrv_bridge_event_object_close_post(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_DESTROY_DEVMEMCONTEXT):
-		printf("ioctl destroy_devmemcontext post\n");
+		pvrsrv_bridge_destroy_devmemcontext_post(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_SGX_UNREGISTER_HW_TRANSFER_CONTEXT):
-		printf("ioctl sgx_unregister_hw_transfer_context post\n");
+		pvrsrv_bridge_sgx_unregister_hw_transfer_context_post(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_SGX_UNREGISTER_HW_RENDER_CONTEXT):
-		printf("ioctl sgx_unregister_hw_render_context post\n");
+		pvrsrv_bridge_sgx_unregister_hw_render_context_post(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_SGX_RELEASECLIENTINFO):
-		printf("ioctl sgx_releaseclientinfo post\n");
+		pvrsrv_bridge_sgx_releaseclientinfo_post(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_SGX_SUBMITTRANSFER):
-		printf("ioctl sgx_submittransfer post\n");
+		pvrsrv_bridge_sgx_submittransfer_post(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_SGX_DOKICK):
-		printf("ioctl sgx_dokick post\n");
+		pvrsrv_bridge_sgx_dokick_post(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_EVENT_OBJECT_WAIT):
-		printf("ioctl event_object_wait post\n");
+		pvrsrv_bridge_event_object_wait_post(fd, ptr);
 		break;
 	case _IOC_NR(PVRSRV_BRIDGE_UNMAP_DEVICECLASS_MEMORY):
-		printf("ioctl unmap_deviceclass_memory post\n");
+		pvrsrv_bridge_unmap_deviceclass_memory_post(fd, ptr);
 		break;
 	default:
 		printf("< [%4d]         : <unknown result> (%08lx)\n", fd, request);

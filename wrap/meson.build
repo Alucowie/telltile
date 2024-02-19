@@ -8,6 +8,12 @@ incdir = include_directories(['../includes'])
 
 wrap_sources = [
   'wrap-util.c',
+  'wrap-pvr-u.c',
+  'wrap-pvr.c',
+  'wrap-sgx.c',
+  'wrap-pvr-mmap.c',
+  'wrap-osfunc.c',
+  'wrap-pvr-dc.c',
   'wrap-syscall.c']
 
 dldep = dependency('dl')
