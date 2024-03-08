@@ -39,10 +39,18 @@ void pvrsrv_bridge_mhandle_to_mmap_data_post(int fd,
 	print_error(out->eError);
 
 	if (out->eError == PVRSRV_OK) {
+		struct buffer *buf;
 		printf("\t\tmmap offset:\t%08x\n", out->ui32MMapOffset);
 		printf("\t\tbyte offset:\t%08x\n", out->ui32ByteOffset);
 		printf("\t\treal byte size:\t%08x\n", out->ui32RealByteSize);
 		printf("\t\tuser vaddr:\t%08x\n", out->ui32UserVAddr);
+		buf = find_buffer(NULL, 0, 0, out->ui32MMapOffset & (~0x80000000), 0);
+		if (buf) {
+			buf->offset = out->ui32ByteOffset;
+			if (buf->len == 0) {
+				buf->len = out->ui32RealByteSize - out->ui32ByteOffset;
+			}
+		}
 	}
 }
 

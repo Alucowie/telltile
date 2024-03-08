@@ -28,6 +28,7 @@
 
 #include <sys/ioctl.h>
 #include <ctype.h>
+#include <syscall.h>
 
 #include "wrap.h"
 
@@ -559,4 +560,174 @@ int ioctl(int fd, unsigned long int request, ...)
 		printf("< [%4d]         : <unknown> (%08lx) (%d)\n", fd, request, ret);
 
 	return ret;
+}
+
+void * mmap(void *addr, size_t length, int prot, int flags, int fd, off_t offset)
+{
+	void *ret = NULL;
+	PROLOG(mmap);
+
+	if ((fd >= 0) && get_pvrsrvkm_info(fd)) {
+		struct buffer *buf = find_buffer(NULL, 0, offset, 0, 0);
+
+		printf("< [%4d]         : mmap: addr=%p, length=%zd, prot=%x, flags=%x, offset=%ld\n",
+				fd, addr, length, prot, flags, offset);
+
+		if (buf && buf->hostptr) {
+			buf->munmap = 0;
+			ret = buf->hostptr;
+		}
+	}
+
+	if (!ret) {
+		ret = orig_mmap(addr, length, prot, flags, fd, offset);
+	}
+
+	if ((fd >= 0) && get_pvrsrvkm_info(fd)) {
+		struct buffer *buf = find_buffer(NULL, 0, offset, 0, 0);
+		if (buf)
+			buf->hostptr = ret;
+		else {
+			/*
+			 * when a buffer is allocated using IOCTL_KGSL_GPUMEM_ALLOC_ID
+			 * it's mmapped by id, not by gpuaddr, so try to find that
+			 * buffer via id now.
+			 */
+			buf = find_buffer(NULL, 0, 0, 0, offset >> 12);
+			if (buf)
+				buf->hostptr = ret;
+		}
+		printf("< [%4d]         : mmap: -> (%p)\n", fd, ret);
+	}
+
+	return ret;
+}
+
+int munmap(void *addr, size_t length)
+{
+	struct buffer *buf;
+	int ret;
+	PROLOG(munmap);
+
+	buf = find_buffer(addr, 0, 0, 0, 0);
+	if (buf) {
+		/* we need the contents at submit ioctl: */
+		printf("fake munmap: buf=%p\n", buf);
+		buf->munmap = 1;
+		ret = 0;
+		goto out;
+	}
+
+	ret = orig_munmap(addr, length);
+out:
+	return ret;
+}
+
+long syscall(long sysno, ...)
+{
+	long error = -1;
+	PROLOG(syscall);
+
+	switch (sysno) {
+#ifdef __NR_mmap2
+		case __NR_mmap2: {
+			void *addr, *ret = NULL;
+			size_t length;
+			int prot, flags, fd;
+			off_t offset;
+			struct buffer *buf = NULL;
+			va_list args;
+
+			va_start(args, sysno);
+			addr = va_arg(args, void *);
+			length = va_arg(args, size_t);
+			prot = va_arg(args, int);
+			flags = va_arg(args, int);
+			fd = va_arg(args, int);
+			offset = va_arg(args, off_t);
+			va_end(args);
+
+			if ((fd >= 0) && get_pvrsrvkm_info(fd)) {
+				buf = find_buffer(NULL, 0, 0, (~0xC0000000) & offset, 0);
+
+				printf("< [%4d]         : mmap: addr=%p, length=%zd, prot=%x, flags=%x, offset=%ld\n",
+						fd, addr, length, prot, flags, offset);
+
+				if (buf && buf->hostptr) {
+					buf->munmap = 0;
+					ret = buf->hostptr;
+				}
+			}
+
+			if (!ret) {
+				ret = (void *)orig_syscall(sysno, addr, length, prot, flags, fd, offset);
+			}
+
+			if ((fd >= 0) && get_pvrsrvkm_info(fd)) {
+				if (buf) {
+					buf->hostptr = ret;
+					buf->flags = flags;
+				}
+				printf("< [%4d]         : mmap: -> (%p)\n", fd, ret);
+			}
+
+			error = (long)ret;
+			break;
+		}
+#endif
+		default:
+			fprintf(stderr, "%s: unsupported syscall number %ld\n", __func__, sysno);
+			break;
+	}
+
+	return error;
+}
+
+static LIST_HEAD(buffers_of_interest);
+
+struct buffer * register_buffer(void *hostptr, uint64_t gpuaddr, uint64_t flags,
+		unsigned int len, unsigned long handle)
+{
+	struct buffer *buf = calloc(1, sizeof *buf);
+	buf->gpuaddr = gpuaddr;
+	buf->hostptr = hostptr;
+	buf->flags = flags;
+	buf->len = len;
+	buf->handle = handle;
+	list_add(&buf->node, &buffers_of_interest);
+	return buf;
+}
+
+void unregister_buffer(struct buffer *buf)
+{
+	if (buf) {
+		list_del(&buf->node);
+		if (buf->munmap)
+			munmap(buf->hostptr, buf->len);
+		free(buf);
+	}
+}
+
+struct buffer * find_buffer(void *hostptr, uint64_t gpuaddr,
+		uint64_t offset, unsigned long handle, unsigned id)
+{
+	struct buffer *buf = NULL;
+	list_for_each_entry(buf, &buffers_of_interest, node) {
+		if (hostptr)
+			if ((buf->hostptr <= hostptr) && (hostptr < (buf->hostptr + buf->len)))
+				return buf;
+		if (gpuaddr)
+			if ((buf->gpuaddr <= gpuaddr) && (gpuaddr < (buf->gpuaddr + buf->len)))
+				return buf;
+		if (offset)
+			if ((buf->offset <= offset) && (offset < (buf->offset + buf->len)))
+				return buf;
+		if (handle)
+			if (buf->handle == handle)
+				return buf;
+		if (id)
+			if (buf->id == id)
+				return buf;
+	}
+	return NULL;
 }

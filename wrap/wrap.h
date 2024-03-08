@@ -33,6 +33,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <assert.h>
+#include <inttypes.h>
 
 #include "pvr_bridge.h"
 #include "sgx_bridge.h"
@@ -45,6 +46,24 @@ void * __rd_dlsym_helper(const char *name);
 		orig_##func = __rd_dlsym_helper(#func);	\
 
 #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]))
+
+struct buffer {
+	void *hostptr;
+	unsigned int len, id;
+	unsigned long handle;
+	uint64_t flags;
+	uint64_t gpuaddr;
+	uint64_t offset;
+	struct list node;
+	int munmap;
+	int dumped;
+};
+
+struct buffer * register_buffer(void *hostptr, uint64_t gpuaddr, uint64_t flags,
+		unsigned int len, unsigned long handle);
+void unregister_buffer(struct buffer *buf);
+struct buffer * find_buffer(void *hostptr, uint64_t gpuaddr,
+		uint64_t offset, unsigned long handle, unsigned id);
 
 void pvrsrv_bridge_event_object_open_pre(int fd, PVRSRV_BRIDGE_PACKAGE *param);
 void pvrsrv_bridge_event_object_open_post(int fd, PVRSRV_BRIDGE_PACKAGE *param);
