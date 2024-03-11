@@ -342,9 +342,11 @@ void pvrsrv_bridge_free_devicemem_pre(int fd,
 #if defined (SUPPORT_SID_INTERFACE)
 	printf("\t\tkernmeminfo:\t%p\n", in->hKernelMemInfo);
 	snprintf(name, sizeof(name), "0x%x", in->hKernelMemInfo);
+	dump_unregister_buffer((IMG_HANDLE)in->hKernelMemInfo, name);
 #else
 	printf("\t\tkernmeminfo:\t%p\n", in->psKernelMemInfo);
 	snprintf(name, sizeof(name), "%p", in->psKernelMemInfo);
+	dump_unregister_buffer((IMG_HANDLE)in->psKernelMemInfo, name);
 #endif
 	print_clientmeminfo(&in->sClientMemInfo);
 }
@@ -383,6 +385,7 @@ void pvrsrv_bridge_sync_ops_flush_to_token_pre(int fd,
 
 	printf("\t\tkernsyncinfo:\t%p\n", in->hKernelSyncInfo);
 	snprintf(name, sizeof(name), "%p-SyncInfo", in->hKernelSyncInfo);
+	dump_unregister_buffer(in->hKernelSyncInfo, name);
 	printf("\t\tread pending:\t%08x\n", in->ui32ReadOpsPendingSnapshot);
 	printf("\t\twrite pending:\t%08x\n", in->ui32WriteOpsPendingSnapshot);
 }
@@ -421,9 +424,11 @@ void pvrsrv_bridge_unmap_deviceclass_memory_pre(int fd,
 #if defined (SUPPORT_SID_INTERFACE)
 	printf("\t\tkern meminfo:\t%p\n", in->hKernelMemInfo);
 	snprintf(name, sizeof(name), "%p", in->hKernelMemInfo);
+	dump_unregister_buffer((IMG_HANDLE)in->hKernelMemInfo, name);
 #else
 	printf("\t\tkern meminfo:\t%p\n", in->psKernelMemInfo);
 	snprintf(name, sizeof(name), "%p", in->psKernelMemInfo);
+	dump_unregister_buffer((IMG_HANDLE)in->psKernelMemInfo, name);
 #endif
 	print_clientmeminfo(&in->sClientMemInfo);
 	print_clientsyncinfo(&in->sClientSyncInfo);

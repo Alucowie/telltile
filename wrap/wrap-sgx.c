@@ -175,16 +175,23 @@ static void print_bridgeinitinfo(SGX_BRIDGE_INIT_INFO *bridgeinitinfo)
 		return;
 	}
 	printf("\t\tCCB:\t\t%p\n", bridgeinitinfo->hKernelCCBMemInfo);
+	dump_unregister_buffer(bridgeinitinfo->hKernelCCBMemInfo, "CCB");
 	printf("\t\tCCB ctl:\t%p\n", bridgeinitinfo->hKernelCCBCtlMemInfo);
+	dump_unregister_buffer(bridgeinitinfo->hKernelCCBCtlMemInfo, "CCBCtl");
 	printf("\t\tCCB event kick:\t%p\n", bridgeinitinfo->hKernelCCBEventKickerMemInfo);
+	dump_unregister_buffer(bridgeinitinfo->hKernelCCBEventKickerMemInfo, "CCBEventKicker");
 	printf("\t\tSGX host ctl:\t%p\n", bridgeinitinfo->hKernelSGXHostCtlMemInfo);
 	buf = find_buffer(0, 0, 0, (unsigned long)bridgeinitinfo->hKernelSGXHostCtlMemInfo, 0);
 	print_sgxmkif_host_ctl(buf->hostptr + buf->offset);
+	dump_unregister_buffer(bridgeinitinfo->hKernelSGXHostCtlMemInfo, "SGXHostCtl");
 	printf("\t\tSGX TA3D ctl:\t%p\n", bridgeinitinfo->hKernelSGXTA3DCtlMemInfo);
+	dump_unregister_buffer(bridgeinitinfo->hKernelSGXTA3DCtlMemInfo, "SGXTA3DCtl");
 #if defined(FIX_HW_BRN_31272) || defined(FIX_HW_BRN_31780) || defined(FIX_HW_BRN_33920)
 	printf("\t\tSGX PTLA WB:\t%p\n", bridgeinitinfo->hKernelSGXPTLAWriteBackMemInfo);
+	dump_unregister_buffer(bridgeinitinfo->hKernelSGXPTLAWriteBackMemInfo, "SGXPTLAWriteBack");
 #endif
 	printf("\t\tSGX misc:\t%p\n", bridgeinitinfo->hKernelSGXMiscMemInfo);
+	dump_unregister_buffer(bridgeinitinfo->hKernelSGXMiscMemInfo, "SGXMisc");
 	for (i = 0; i < SGXMKIF_CMD_MAX; i++) {
 		printf("\t\thost kick[%i]:\t%08x\n", i, bridgeinitinfo->aui32HostKickAddr[i]);
 	}
@@ -196,9 +203,12 @@ static void print_bridgeinitinfo(SGX_BRIDGE_INIT_INFO *bridgeinitinfo)
 #endif
 #if defined(SUPPORT_SGX_HWPERF)
 	printf("\t\tHW Perf CB:\t%p\n", bridgeinitinfo->hKernelHWPerfCBMemInfo);
+	dump_unregister_buffer(bridgeinitinfo->hKernelHWPerfCBMemInfo, "HWPerfCB");
 #endif
 	printf("\t\tTA sig buffer:\t%p\n", bridgeinitinfo->hKernelTASigBufferMemInfo);
+	dump_unregister_buffer(bridgeinitinfo->hKernelTASigBufferMemInfo, "TASigBuffer");
 	printf("\t\t3D sig buffer:\t%p\n", bridgeinitinfo->hKernel3DSigBufferMemInfo);
+	dump_unregister_buffer(bridgeinitinfo->hKernel3DSigBufferMemInfo, "3DSigBuffer");
 #if defined(FIX_HW_BRN_29702)
 	printf("\t\tCFI:\t\t%p\n", bridgeinitinfo->hKernelCFIMemInfo);
 #endif
@@ -241,6 +251,11 @@ static void print_bridgeinitinfo(SGX_BRIDGE_INIT_INFO *bridgeinitinfo)
 	}
 	for (i = 0; i < SGX_MAX_INIT_MEM_HANDLES; i++) {
 		printf("\t\tinit memhd[%i]:\t%p\n", i, bridgeinitinfo->asInitMemHandles[i]);
+		if (bridgeinitinfo->asInitMemHandles[i]) {
+			char buf_name[32];
+			snprintf(buf_name, sizeof(buf_name), "InitMem_%d", i);
+			dump_unregister_buffer(bridgeinitinfo->asInitMemHandles[i], buf_name);
+		}
 	}
 }
 
@@ -624,11 +639,13 @@ void pvrsrv_bridge_sgx_releaseclientinfo_post(int fd,
 	PVRSRV_BRIDGE_RETURN *out = param->pvParamOut;
 
 	print_error(out->eError);
+	//printf("\t\tdata:\t%p (unused)\n", out->pvData);
 }
 
 void print_transfersgxkick(PVRSRV_TRANSFER_SGX_KICK *transfersgxkick)
 {
 	int i;
+	char name[32];
 	if (!transfersgxkick) {
 		return;
 	}
@@ -638,6 +655,10 @@ void print_transfersgxkick(PVRSRV_TRANSFER_SGX_KICK *transfersgxkick)
 	printf("\t\thwtransferctxt:\t%08x\n", transfersgxkick->sHWTransferContextDevVAddr.uiAddr);
 	printf("\t\tta syncinfo:\t%p\n", transfersgxkick->hTASyncInfo);
 	printf("\t\t3d syncinfo:\t%p\n", transfersgxkick->h3DSyncInfo);
+	if (transfersgxkick->h3DSyncInfo) {
+		snprintf(name, sizeof(name), "%p-3DSyncInfo", transfersgxkick->h3DSyncInfo);
+		dump_unregister_buffer((IMG_HANDLE)transfersgxkick->h3DSyncInfo, name);
+	}
 	printf("\t\tnum src sync:\t%08x\n", transfersgxkick->ui32NumSrcSync);
 	printf("\t\tmax src sync:\t%08x\n", SGX_MAX_TRANSFER_SYNC_OPS);
 	for (i = 0; i < transfersgxkick->ui32NumSrcSync; i++) {
@@ -646,6 +667,10 @@ void print_transfersgxkick(PVRSRV_TRANSFER_SGX_KICK *transfersgxkick)
 	printf("\t\tnum dst sync:\t%08x\n", transfersgxkick->ui32NumDstSync);
 	for (i = 0; i < transfersgxkick->ui32NumDstSync; i++) {
 		printf("\t\tdst sync[%d]:\t%p\n", i, transfersgxkick->ahDstSyncInfo[i]);
+		if (transfersgxkick->ahDstSyncInfo[i]) {
+			snprintf(name, sizeof(name), "%p-DstSyncInfo%d", transfersgxkick->ahDstSyncInfo[i], i);
+			dump_unregister_buffer((IMG_HANDLE)transfersgxkick->ahDstSyncInfo[i], name);
+		}
 	}
 	printf("\t\tflags:\t\t%08x\n", transfersgxkick->ui32Flags);
 	printf("\t\tpdump flags:\t%08x\n", transfersgxkick->ui32PDumpFlags);
@@ -698,28 +723,40 @@ void print_ctlstatus(CTL_STATUS *ctlstatus)
 
 void print_internalstatusupdate(SGX_INTERNEL_STATUS_UPDATE *statusupdate)
 {
+	char name[32];
 	if (!statusupdate) {
 		return;
 	}
 
 	print_ctlstatus(&statusupdate->sCtlStatus);
 	printf("\t\tkern meminfo:\t%p\n", statusupdate->hKernelMemInfo);
+	if (statusupdate->hKernelMemInfo) {
+		snprintf(name, sizeof(name), "%p-kernel", statusupdate->hKernelMemInfo);
+		dump_unregister_buffer((IMG_HANDLE)statusupdate->hKernelMemInfo, name);
+	}
 }
 
 void print_ccbkick(SGX_CCB_KICK *ccbkick)
 {
 	int i;
+	char name[32];
 	if (!ccbkick) {
 		return;
 	}
 
 	print_command(&ccbkick->sCommand);
 	printf("\t\tccb kmeminfo:\t%p\n", ccbkick->hCCBKernelMemInfo);
+	snprintf(name, sizeof(name), "%p-CCB", ccbkick->hCCBKernelMemInfo);
+	dump_unregister_buffer((IMG_HANDLE)ccbkick->hCCBKernelMemInfo, name);
 	printf("\t\tnum dst sync:\t%08x\n", ccbkick->ui32NumDstSyncObjects);
 	printf("\t\tkhwsync list:\t%p\n", ccbkick->hKernelHWSyncListMemInfo);
+	snprintf(name, sizeof(name), "%p-HWSyncList", ccbkick->hKernelHWSyncListMemInfo);
+	dump_unregister_buffer((IMG_HANDLE)ccbkick->hKernelHWSyncListMemInfo, name);
 	printf("\t\tdst sync:\t%p (pointer)\n", ccbkick->pahDstSyncHandles);
 	for (i = 0; i < ccbkick->ui32NumDstSyncObjects; i++) {
 	        printf("\t\tdst sync[%d]:\t%p\n", i, ccbkick->pahDstSyncHandles[i]);
+		snprintf(name, sizeof(name), "%p-DstSync%d", ccbkick->pahDstSyncHandles[i], i);
+		dump_unregister_buffer((IMG_HANDLE)ccbkick->pahDstSyncHandles[i], name);
 	}
 	printf("\t\tnum ta status:\t%08x\n", ccbkick->ui32NumTAStatusVals);
 	printf("\t\tnum 3d status:\t%08x\n", ccbkick->ui32Num3DStatusVals);
@@ -769,6 +806,10 @@ void print_ccbkick(SGX_CCB_KICK *ccbkick)
 	printf("\t\tta 3d sync:\t%p\n", ccbkick->hTA3DSyncInfo);
 	printf("\t\tta sync:\t%p\n", ccbkick->hTASyncInfo);
 	printf("\t\t3d sync:\t%p\n", ccbkick->h3DSyncInfo);
+	if (ccbkick->h3DSyncInfo) {
+		snprintf(name, sizeof(name), "%p-3DSyncInfo", ccbkick->h3DSyncInfo);
+		dump_unregister_buffer((IMG_HANDLE)ccbkick->h3DSyncInfo, name);
+	}
 #if defined(PDUMP)
 	printf("\t\tccb dump:\t%08x\n", ccbkick->ui32CCBDumpWOff);
 #endif

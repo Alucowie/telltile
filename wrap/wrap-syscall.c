@@ -731,3 +731,30 @@ struct buffer * find_buffer(void *hostptr, uint64_t gpuaddr,
 	}
 	return NULL;
 }
+
+void dump_buffer(struct buffer *buf, const char *buf_name)
+{
+	static int cnt = 0;
+	if (buf && buf->hostptr && buf->len) {
+		char filename[64];
+		int fd;
+		sprintf(filename, "%04d-%016"PRIx64"-%s.dat", cnt, buf->gpuaddr, buf_name);
+		printf("\t\tdumping: %s\n", filename);
+		fd = open(filename, O_WRONLY| O_TRUNC | O_CREAT, 0644);
+		write(fd, buf->hostptr + buf->offset, buf->len);
+		close(fd);
+		cnt++;
+		buf->dumped = 1;
+	}
+}
+
+void dump_unregister_buffer(IMG_HANDLE handle, const char *buf_name)
+{
+	struct buffer *buf;
+
+	buf = find_buffer(0, 0, 0, (unsigned long)handle, 0);
+	if (buf) {
+		dump_buffer(buf, buf_name);
+		unregister_buffer(buf);
+	}
+}
