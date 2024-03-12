@@ -113,9 +113,63 @@ static void print_structsizes(SGX_MISCINFO_STRUCT_SIZES *structsizes)
 	printf("\t\tcommand:\t%08x\n", structsizes->ui32Sizeof_COMMAND);
 }
 
+static void print_sgxmkif_host_ctl(SGXMKIF_HOST_CTL *host_ctl)
+{
+#if defined(SGX_FEATURE_EXTENDED_PERF_COUNTERS)
+	int i;
+#endif
+
+	if (!host_ctl) {
+	    return;
+	}
+#if defined(PVRSRV_USSE_EDM_BREAKPOINTS)
+	printf("\t\tbrkpoint:\t%08x\n", host_ctl->ui32BreakpointDisable);
+	printf("\t\tcontinue:\t%08x\n", host_ctl->ui32Continue);
+#endif
+	printf("\t\tinit stat:\t%08x\n", host_ctl->ui32InitStatus);
+	printf("\t\tpwr stat:\t%08x\n", host_ctl->ui32PowerStatus);
+	printf("\t\tcln stat:\t%08x\n", host_ctl->ui32CleanupStatus);
+#if defined(FIX_HW_BRN_28889)
+	printf("\t\tinvl stat:\t%08x\n", host_ctl->ui32InvalStatus);
+#endif
+#if defined(SUPPORT_HW_RECOVERY)
+	printf("\t\tukern lock:\t%08x\n", host_ctl->ui32uKernelDetectedLockups);
+	printf("\t\thost lock:\t%08x\n", host_ctl->ui32HostDetectedLockups);
+	printf("\t\thwrecov rate:\t%08x\n", host_ctl->ui32HWRecoverySampleRate);
+#endif
+	printf("\t\tukern clk:\t%08x\n", host_ctl->ui32uKernelTimerClock);
+	printf("\t\tpowman rate:\t%08x\n", host_ctl->ui32ActivePowManSampleRate);
+	printf("\t\tintr flg:\t%08x\n", host_ctl->ui32InterruptFlags);
+	printf("\t\tintr clr:\t%08x\n", host_ctl->ui32InterruptClearFlags);
+	printf("\t\tbp clr sig:\t%08x\n", host_ctl->ui32BPSetClearSignal);
+	printf("\t\tnum powevts:\t%08x\n", host_ctl->ui32NumActivePowerEvents);
+	printf("\t\ttime wraps:\t%08x\n", host_ctl->ui32TimeWraps);
+	printf("\t\thost clk:\t%08x\n", host_ctl->ui32HostClock);
+	printf("\t\tassert fail:\t%08x\n", host_ctl->ui32AssertFail);
+#if defined(SGX_FEATURE_EXTENDED_PERF_COUNTERS)
+	printf("\t\tperf grp:\t");
+	for (i = 0; i < PVRSRV_SGX_HWPERF_NUM_COUNTERS; i++) {
+		printf("%08x ", host_ctl->aui32PerfGroup[i]);
+	}
+	printf("\n");
+	printf("\t\tperf bit:\t");
+	for (i = 0; i < PVRSRV_SGX_HWPERF_NUM_COUNTERS; i++) {
+		printf("%08x ", host_ctl->aui32PerfBit[i]);
+	}
+	printf("\n");
+#else
+	printf("\t\tperf grp:\t%08x\n", host_ctl->ui32PerfGroup);
+#endif
+#if defined(FIX_HW_BRN_31939)
+	printf("\t\tbrn31939:\t%08x\n", host_ctl->ui32BRN31939Mem);
+#endif
+	printf("\t\topencl cnt:\t%08x\n", host_ctl->ui32OpenCLDelayCount);
+}
+
 static void print_bridgeinitinfo(SGX_BRIDGE_INIT_INFO *bridgeinitinfo)
 {
 	int i;
+	struct buffer *buf;
 
 	if (!bridgeinitinfo) {
 		return;
@@ -124,6 +178,8 @@ static void print_bridgeinitinfo(SGX_BRIDGE_INIT_INFO *bridgeinitinfo)
 	printf("\t\tCCB ctl:\t%p\n", bridgeinitinfo->hKernelCCBCtlMemInfo);
 	printf("\t\tCCB event kick:\t%p\n", bridgeinitinfo->hKernelCCBEventKickerMemInfo);
 	printf("\t\tSGX host ctl:\t%p\n", bridgeinitinfo->hKernelSGXHostCtlMemInfo);
+	buf = find_buffer(0, 0, 0, (unsigned long)bridgeinitinfo->hKernelSGXHostCtlMemInfo, 0);
+	print_sgxmkif_host_ctl(buf->hostptr + buf->offset);
 	printf("\t\tSGX TA3D ctl:\t%p\n", bridgeinitinfo->hKernelSGXTA3DCtlMemInfo);
 #if defined(FIX_HW_BRN_31272) || defined(FIX_HW_BRN_31780) || defined(FIX_HW_BRN_33920)
 	printf("\t\tSGX PTLA WB:\t%p\n", bridgeinitinfo->hKernelSGXPTLAWriteBackMemInfo);

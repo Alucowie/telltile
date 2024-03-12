@@ -37,6 +37,7 @@
 
 #include "pvr_bridge.h"
 #include "sgx_bridge.h"
+#include "sgx_mkif_km.h"
 
 void * __rd_dlsym_helper(const char *name);
 
