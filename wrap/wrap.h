@@ -69,6 +69,7 @@ struct buffer * find_buffer(void *hostptr, uint64_t gpuaddr,
 		uint64_t offset, unsigned long handle, unsigned id);
 void dump_buffer(struct buffer *buf, const char *buf_name);
 void dump_unregister_buffer(IMG_HANDLE handle, const char *buf_name);
+void dump_buffers(int fd);
 
 void pvrsrv_bridge_event_object_open_pre(int fd, PVRSRV_BRIDGE_PACKAGE *param);
 void pvrsrv_bridge_event_object_open_post(int fd, PVRSRV_BRIDGE_PACKAGE *param);

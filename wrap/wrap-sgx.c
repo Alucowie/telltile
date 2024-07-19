@@ -826,6 +826,8 @@ void pvrsrv_bridge_sgx_dokick_pre(int fd,
 
 	printf("\t\tdevice cookie:\t%p\n", in->hDevCookie);
 	print_ccbkick(&in->sCCBKick);
+
+	dump_buffers(fd);
 }
 
 void pvrsrv_bridge_sgx_dokick_post(int fd,

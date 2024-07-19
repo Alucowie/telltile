@@ -29,6 +29,7 @@
 #include <sys/ioctl.h>
 #include <ctype.h>
 #include <syscall.h>
+#include <sys/mman.h>
 
 #include "wrap.h"
 
@@ -745,6 +746,34 @@ void dump_buffer(struct buffer *buf, const char *buf_name)
 		close(fd);
 		cnt++;
 		buf->dumped = 1;
+	}
+}
+
+void dump_buffers(int fd)
+{
+	PROLOG(mmap);
+	PROLOG(munmap);
+
+	struct buffer *buf;
+	char name[32];
+	list_for_each_entry(buf, &buffers_of_interest, node) {
+		if (!buf || buf->dumped)
+		    continue;
+
+		int need_unmap = 0;
+
+		if (!buf->hostptr) {
+			buf->hostptr = orig_mmap(0, buf->len, PROT_READ, MAP_SHARED, fd, buf->handle | 0x80000000);
+			need_unmap = 1;
+		}
+
+		snprintf(name, sizeof(name), "%04lx-buffers", buf->handle);
+		dump_buffer(buf, name);
+
+		if (need_unmap) {
+			orig_munmap(buf->hostptr, buf->len);
+			buf->hostptr = NULL;
+		}
 	}
 }
 
