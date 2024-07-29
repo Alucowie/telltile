@@ -42,7 +42,7 @@
 void * __rd_dlsym_helper(const char *name);
 
 #define PROLOG(func)					\
-	static typeof(func) *orig_##func = NULL;	\
+	static __typeof__(func) *orig_##func = NULL;	\
 	if (!orig_##func)				\
 		orig_##func = __rd_dlsym_helper(#func);	\
 
