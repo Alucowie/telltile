@@ -131,6 +131,63 @@ void pvrsrv_bridge_acquire_deviceinfo_post(int fd,
 	printf("\t\tdevice cookie:\t%p\n", out->hDevCookie);
 }
 
+#define ENUM_MEM(n) [n] = "PVRSRV_"#n
+enum pvrsrv_mem {
+	MEM_READ,
+	MEM_WRITE,
+	MEM_CACHE_CONSISTENT,
+	MEM_NO_SYNCOBJ,
+	MEM_INTERLEAVED,
+	MEM_DUMMY,
+	MEM_EDM_PROTECT,
+	MEM_ZERO,
+	MEM_USER_SUPPLIED_DEVVADDR,
+	MEM_RAM_BACKED_ALLOCATION,
+	MEM_NO_RESMAN,
+	MEM_EXPORTED,
+};
+static const char *memnames[] = {
+	ENUM_MEM(MEM_READ),
+	ENUM_MEM(MEM_WRITE),
+	ENUM_MEM(MEM_CACHE_CONSISTENT),
+	ENUM_MEM(MEM_NO_SYNCOBJ),
+	ENUM_MEM(MEM_INTERLEAVED),
+	ENUM_MEM(MEM_DUMMY),
+	ENUM_MEM(MEM_EDM_PROTECT),
+	ENUM_MEM(MEM_ZERO),
+	ENUM_MEM(MEM_USER_SUPPLIED_DEVVADDR),
+	ENUM_MEM(MEM_RAM_BACKED_ALLOCATION),
+	ENUM_MEM(MEM_NO_RESMAN),
+	ENUM_MEM(MEM_EXPORTED),
+};
+void print_attribs(IMG_UINT32 attribs)
+{
+	int previous = 0;
+	int flag;
+	int i;
+	const char *memname;
+
+	printf("\t\tattribs:\t%08x (", attribs);
+
+	for (i = 0; i < 32; i++)
+	{
+		flag = 1 << i;
+		if (attribs & flag) {
+			if (previous)
+				printf(" | ");
+			previous = 1;
+
+			memname = (i < ARRAY_SIZE(memnames)) ? memnames[i] : NULL;
+			if (memname)
+				printf("%s", memname);
+			else
+				printf("unknown mem attribut 0x%x", flag);
+		}
+	}
+
+	printf(")\n");
+}
+
 void pvrsrv_bridge_alloc_devicemem_pre(int fd,
 		PVRSRV_BRIDGE_PACKAGE *param)
 {
@@ -138,7 +195,7 @@ void pvrsrv_bridge_alloc_devicemem_pre(int fd,
 
 	printf("\t\tdevice cookie:\t%p\n", in->hDevCookie);
 	printf("\t\tdevmem heap:\t%p\n", in->hDevMemHeap);
-	printf("\t\tattribs:\t%08x\n", in->ui32Attribs);
+	print_attribs(in->ui32Attribs);
 	printf("\t\tsize:\t\t%08x\n", in->ui32Size);
 	printf("\t\talignment:\t%08x\n", in->ui32Alignment);
 }
