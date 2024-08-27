@@ -161,5 +161,6 @@ void print_error(PVRSRV_ERROR error);
 void print_heapinfo(int i, PVRSRV_HEAP_INFO *heapinfo);
 void print_eventobject(PVRSRV_EVENTOBJECT *eventobject);
 void print_miscinfo(PVRSRV_MISC_INFO *miscinfo);
+void print_attribs(IMG_UINT32 ui32Attribs);
 
 #endif /* WRAP_H_ */

@@ -254,8 +254,103 @@ void print_heapinfo(int i, PVRSRV_HEAP_INFO *heapinfo)
 	printf("\t\tdevmem heap:\t%p\n", heapinfo->hDevMemHeap);
 	printf("\t\tdev vaddr base:\t%08x\n", heapinfo->sDevVAddrBase.uiAddr);
 	printf("\t\theap byte size:\t%u\n", heapinfo->ui32HeapByteSize);
-	printf("\t\tattribs:\t%08x\n", heapinfo->ui32Attribs);
+        print_attribs(heapinfo->ui32Attribs);
 	printf("\t\tX tile stride:\t%08x\n", heapinfo->ui32XTileStride);
+}
+
+#define ENUM_MEM(n) [n] = "PVRSRV_"#n
+enum pvrsrv_mem {
+	MEM_READ,
+	MEM_WRITE,
+	MEM_CACHE_CONSISTENT,
+	MEM_NO_SYNCOBJ,
+	MEM_INTERLEAVED,
+	MEM_DUMMY,
+	MEM_EDM_PROTECT,
+	MEM_ZERO,
+	MEM_USER_SUPPLIED_DEVVADDR,
+	MEM_RAM_BACKED_ALLOCATION,
+	MEM_NO_RESMAN,
+	MEM_EXPORTED,
+        HAP_CACHED,
+        HAP_UNCACHED,
+        HAP_WRITECOMBINE,
+        HAP_KERNEL_ONLY,
+        HAP_SINGLE_PROCESS,
+        HAP_MULTI_PROCESS,
+        HAP_FROM_EXISTING_PROCESS,
+        HAP_NO_CPU_VIRTUAL,
+        MAP_GC_MMU,
+        HAP_GPU_PAGEABLE,
+        HAP_NO_GPU_VIRTUAL_ON_ALLOC,
+        MEM_UNUSED23,
+        MEM_BACKINGSTORE_FIELD24_INTERNAL,
+        MEM_BACKINGSTORE_FIELD25_INTERNAL,
+        MEM_BACKINGSTORE_FIELD26_INTERNAL,
+        MAP_NOUSERVIRTUAL,
+        MEM_XPROC,
+        MEM_ION,
+        MEM_ALLOCATENONCACHEDMEM,
+};
+static const char *memnames[] = {
+	ENUM_MEM(MEM_READ),
+	ENUM_MEM(MEM_WRITE),
+	ENUM_MEM(MEM_CACHE_CONSISTENT),
+	ENUM_MEM(MEM_NO_SYNCOBJ),
+	ENUM_MEM(MEM_INTERLEAVED),
+	ENUM_MEM(MEM_DUMMY),
+	ENUM_MEM(MEM_EDM_PROTECT),
+	ENUM_MEM(MEM_ZERO),
+	ENUM_MEM(MEM_USER_SUPPLIED_DEVVADDR),
+	ENUM_MEM(MEM_RAM_BACKED_ALLOCATION),
+	ENUM_MEM(MEM_NO_RESMAN),
+	ENUM_MEM(MEM_EXPORTED),
+        ENUM_MEM(HAP_CACHED),
+        ENUM_MEM(HAP_UNCACHED),
+        ENUM_MEM(HAP_WRITECOMBINE),
+        ENUM_MEM(HAP_KERNEL_ONLY),
+        ENUM_MEM(HAP_SINGLE_PROCESS),
+        ENUM_MEM(HAP_MULTI_PROCESS),
+        ENUM_MEM(HAP_FROM_EXISTING_PROCESS),
+        ENUM_MEM(HAP_NO_CPU_VIRTUAL),
+        ENUM_MEM(MAP_GC_MMU),
+        ENUM_MEM(HAP_GPU_PAGEABLE),
+        ENUM_MEM(HAP_NO_GPU_VIRTUAL_ON_ALLOC),
+        ENUM_MEM(MEM_UNUSED23),
+        ENUM_MEM(MEM_BACKINGSTORE_FIELD24_INTERNAL),
+        ENUM_MEM(MEM_BACKINGSTORE_FIELD25_INTERNAL),
+        ENUM_MEM(MEM_BACKINGSTORE_FIELD26_INTERNAL),
+        ENUM_MEM(MAP_NOUSERVIRTUAL),
+        ENUM_MEM(MEM_XPROC),
+        ENUM_MEM(MEM_ION),
+        ENUM_MEM(MEM_ALLOCATENONCACHEDMEM),
+};
+void print_attribs(IMG_UINT32 attribs)
+{
+	int previous = 0;
+	int flag;
+	int i;
+	const char *memname;
+
+	printf("\t\tattribs:\t%08x (", attribs);
+
+	for (i = 0; i < 32; i++)
+	{
+		flag = 1 << i;
+		if (attribs & flag) {
+			if (previous)
+				printf(" | ");
+			previous = 1;
+
+			memname = (i < ARRAY_SIZE(memnames)) ? memnames[i] : NULL;
+			if (memname)
+				printf("%s", memname);
+			else
+				printf("unknown mem attribut 0x%x", flag);
+		}
+	}
+
+	printf(")\n");
 }
 
 void print_eventobject(PVRSRV_EVENTOBJECT *eventobject)
