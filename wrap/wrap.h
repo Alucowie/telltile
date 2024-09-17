@@ -35,6 +35,8 @@
 #include <assert.h>
 #include <inttypes.h>
 
+#include "config_sgx.h"
+
 #include "pvr_bridge.h"
 #include "sgx_bridge.h"
 #include "sgx_mkif_km.h"
