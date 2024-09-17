@@ -9,9 +9,16 @@ cargs = [
   '-DDEBUG',
   ]
 
+sgxversion = get_option('sgx_version')
+
 conf_sgx = configuration_data()
-conf_sgx.set('sgxversion', 530)
-conf_sgx.set('corerev', 110)
+conf_sgx.set('sgxversion', sgxversion)
+if sgxversion == '530'
+  conf_sgx.set('corerev', 110)
+else
+  conf_sgx.set('corerev', 100)
+endif
+
 configure_file(input : 'config_sgx.h.in',
                output : 'config_sgx.h',
                configuration : conf_sgx)

@@ -1,0 +1,12 @@
+# Copyright © 2024 Anthoine Bourgeois
+# SPDX-License-Identifier: MIT
+
+option(
+  'sgx_version',
+   type : 'combo',
+   value : '530',
+   choices : [
+     '530', '540'
+   ],
+   description : 'SGX SoC version.'
+)
