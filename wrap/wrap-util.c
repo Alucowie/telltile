@@ -248,14 +248,41 @@ void print_error(PVRSRV_ERROR error)
 		errorname ? errorname : "unknown");
 }
 
+const char *sgx_heap_id[] = {
+    ENUM_INFO(SGX_GENERAL_HEAP_ID),
+    ENUM_INFO(SGX_TADATA_HEAP_ID),
+    ENUM_INFO(SGX_KERNEL_CODE_HEAP_ID),
+    ENUM_INFO(SGX_KERNEL_DATA_HEAP_ID),
+    ENUM_INFO(SGX_PIXELSHADER_HEAP_ID),
+    ENUM_INFO(SGX_VERTEXSHADER_HEAP_ID),
+    ENUM_INFO(SGX_PDSPIXEL_CODEDATA_HEAP_ID),
+    ENUM_INFO(SGX_PDSVERTEX_CODEDATA_HEAP_ID),
+    ENUM_INFO(SGX_SYNCINFO_HEAP_ID),
+    ENUM_INFO(SGX_SHARED_3DPARAMETERS_HEAP_ID),
+    ENUM_INFO(SGX_PERCONTEXT_3DPARAMETERS_HEAP_ID),
+#if defined(SUPPORT_SGX_GENERAL_MAPPING_HEAP)
+    ENUM_INFO(SGX_GENERAL_MAPPING_HEAP_ID),
+#endif
+#if defined(SGX_FEATURE_2D_HARDWARE)
+    ENUM_INFO(SGX_2D_HEAP_ID),
+#else
+#if defined(FIX_HW_BRN_26915)
+    ENUM_INFO(SGX_CGBUFFER_HEAP_ID),
+#endif
+#endif
+    ENUM_INFO(SGX_MAX_HEAP_ID),
+};
+
 void print_heapinfo(int i, PVRSRV_HEAP_INFO *heapinfo)
 {
-	printf("\t\theap ID[%d]:\t%08x\n", i, heapinfo->ui32HeapID);
+    if (heapinfo->ui32HeapID != 0xffffffff) {
+	printf("\t\theap ID[%d]:\t%08x (%s)\n", i, heapinfo->ui32HeapID, sgx_heap_id[HEAP_IDX(heapinfo->ui32HeapID)]);
 	printf("\t\tdevmem heap:\t%p\n", heapinfo->hDevMemHeap);
 	printf("\t\tdev vaddr base:\t%08x\n", heapinfo->sDevVAddrBase.uiAddr);
 	printf("\t\theap byte size:\t%u\n", heapinfo->ui32HeapByteSize);
         print_attribs(heapinfo->ui32Attribs);
 	printf("\t\tX tile stride:\t%08x\n", heapinfo->ui32XTileStride);
+    }
 }
 
 #define ENUM_MEM(n) [n] = "PVRSRV_"#n
