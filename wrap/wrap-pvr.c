@@ -280,8 +280,8 @@ void pvrsrv_bridge_get_devmem_heapinfo_post(int fd,
 
 	print_error(out->eError);
 	if (out->eError == PVRSRV_OK) {
-		printf("\t\tclient count:\t%08x\n", out->ui32ClientHeapCount);
-		printf("\t\tclient max:\t%08x\n", PVRSRV_MAX_CLIENT_HEAPS);
+		printf("\t\tclient count:\t%u\n", out->ui32ClientHeapCount);
+		printf("\t\tclient max:\t%u\n", PVRSRV_MAX_CLIENT_HEAPS);
 		for (i = 0; i < out->ui32ClientHeapCount; i++) {
 			print_heapinfo(i, &out->sHeapInfo[i]);
 		}
