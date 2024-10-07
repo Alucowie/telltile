@@ -193,13 +193,14 @@ void pvrsrv_bridge_alloc_devicemem_post(int fd,
 		printf("\t\tkernel meminfo:\t%p (unused)\n", psKernelMemInfo);
 		print_clientmeminfo(&out->sClientMemInfo);
 		register_buffer(NULL, (uint64_t)(uintptr_t)out->sClientMemInfo.pvLinAddrKM,
-				0, out->sClientMemInfo.uAllocSize,
-				(unsigned long)out->sClientMemInfo.hMappingInfo);
+				out->sClientMemInfo.ui32Flags,
+				out->sClientMemInfo.uAllocSize,
+				(unsigned long)out->sClientMemInfo.hKernelMemInfo);
 		print_clientsyncinfo(&out->sClientSyncInfo);
 		if (out->sClientSyncInfo.hKernelSyncInfo) {
 		    register_buffer(NULL, (uint64_t)(uintptr_t)out->sClientSyncInfo.hKernelSyncInfo,
 			    0, 0,
-			    (unsigned long)out->sClientSyncInfo.hMappingInfo);
+			    (unsigned long)out->sClientSyncInfo.hKernelSyncInfo);
 		}
 	}
 }
@@ -321,7 +322,8 @@ void pvrsrv_bridge_map_deviceclass_memory_post(int fd,
 	print_error(out->eError);
 	print_clientmeminfo(&out->sClientMemInfo);
 	register_buffer(NULL, (uint64_t)(uintptr_t)out->sClientMemInfo.pvLinAddrKM,
-		0, out->sClientMemInfo.uAllocSize,
+		out->sClientMemInfo.ui32Flags,
+		out->sClientMemInfo.uAllocSize,
 		(unsigned long)out->sClientMemInfo.hKernelMemInfo);
 	print_clientsyncinfo(&out->sClientSyncInfo);
 #if defined (SUPPORT_SID_INTERFACE)
