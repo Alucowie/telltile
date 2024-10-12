@@ -273,8 +273,12 @@ const char *sgx_heap_id[] = {
     ENUM_INFO(SGX_MAX_HEAP_ID),
 };
 
+#define MAX_HEAP_ID 32
+static struct head initialized_heads[MAX_HEAP_ID];
+
 void print_heapinfo(int i, PVRSRV_HEAP_INFO *heapinfo)
 {
+    unsigned int index = (uintptr_t)heapinfo->hDevMemHeap;
     if (heapinfo->ui32HeapID != 0xffffffff) {
 	printf("\t\theap ID[%d]:\t%08x (%s)\n", i, heapinfo->ui32HeapID, sgx_heap_id[HEAP_IDX(heapinfo->ui32HeapID)]);
 	printf("\t\tdevmem heap:\t%p\n", heapinfo->hDevMemHeap);
@@ -282,7 +286,28 @@ void print_heapinfo(int i, PVRSRV_HEAP_INFO *heapinfo)
 	printf("\t\theap byte size:\t%u\n", heapinfo->ui32HeapByteSize);
         print_attribs(heapinfo->ui32Attribs);
 	printf("\t\tX tile stride:\t%08x\n", heapinfo->ui32XTileStride);
+
+        if (index == 0)
+            return;
+        if (index >= MAX_HEAP_ID)
+            fprintf(stderr, "Can't initialize heap %u\n", index);
+
+        if (initialized_heads[index-1].used &&
+                initialized_heads[index-1].heap_id != heapinfo->ui32HeapID) {
+            fprintf(stderr, "Heap already initialized %u\n", index);
+        } else {
+            initialized_heads[index-1].used = true;
+            initialized_heads[index-1].heap_id = heapinfo->ui32HeapID;
+        }
     }
+}
+
+const char *heap_str(void *devmem_heap)
+{
+    unsigned int index = (uintptr_t)devmem_heap;
+    if (index == 0 || index >= MAX_HEAP_ID)
+        return "Unknown heap";
+    return sgx_heap_id[HEAP_IDX(initialized_heads[index-1].heap_id)];
 }
 
 #define ENUM_MEM(n) [n] = "PVRSRV_"#n

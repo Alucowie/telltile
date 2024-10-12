@@ -34,6 +34,7 @@
 #include <stdio.h>
 #include <assert.h>
 #include <inttypes.h>
+#include <stdbool.h>
 
 #include "config_sgx.h"
 
@@ -159,8 +160,14 @@ void pvrsrv_bridge_unmap_deviceclass_memory_post(int fd, PVRSRV_BRIDGE_PACKAGE *
 #define ENUM_INFO(n) [n] = #n
 void print_error(PVRSRV_ERROR error);
 void print_heapinfo(int i, PVRSRV_HEAP_INFO *heapinfo);
+const char *heap_str(void *devmem_heap);
 void print_eventobject(PVRSRV_EVENTOBJECT *eventobject);
 void print_miscinfo(PVRSRV_MISC_INFO *miscinfo);
 void print_attribs(IMG_UINT32 ui32Attribs);
+
+struct head {
+    bool used;
+    unsigned int heap_id;
+};
 
 #endif /* WRAP_H_ */

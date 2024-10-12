@@ -137,7 +137,7 @@ void pvrsrv_bridge_alloc_devicemem_pre(int fd,
 	PVRSRV_BRIDGE_IN_ALLOCDEVICEMEM *in = param->pvParamIn;
 
 	printf("\t\tdevice cookie:\t%p\n", in->hDevCookie);
-	printf("\t\tdevmem heap:\t%p\n", in->hDevMemHeap);
+	printf("\t\tdevmem heap:\t%p (%s)\n", in->hDevMemHeap, heap_str(in->hDevMemHeap));
 	print_attribs(in->ui32Attribs);
 	printf("\t\tsize:\t\t%08x\n", in->ui32Size);
 	printf("\t\talignment:\t%08x\n", in->ui32Alignment);
